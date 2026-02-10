@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Be My Valentine?</title>
     <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
         body {
             display: flex;
             justify-content: center;
@@ -12,7 +16,7 @@
             height: 100vh;
             margin: 0;
             background-color: #ffebee;
-            /* Using the exact file name provided */
+            /* Using your exact filename */
             background-image: linear-gradient(rgba(255, 235, 238, 0.5), rgba(255, 235, 238, 0.5)), url('A72B4E76-EB0E-4EFA-86DA-5DEDE32719F7_1_105_c.jpeg');
             background-size: cover;
             background-position: center;
@@ -27,8 +31,8 @@
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             width: 85%;
-            max-width: 400px;
-            min-height: 300px;
+            max-width: 350px;
+            min-height: 250px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -36,28 +40,29 @@
             border: 2px solid #d32f2f;
             z-index: 5;
         }
-        h1 { color: #d32f2f; font-size: 1.4rem; margin-bottom: 20px; text-shadow: 1px 1px 0px white; }
+        h1 { color: #d32f2f; font-size: 1.3rem; margin-bottom: 20px; text-shadow: 1px 1px 0px white; }
         .buttons {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
-            min-height: 100px;
+            gap: 15px;
+            min-height: 80px;
+            position: relative;
         }
         button {
-            padding: 15px 25px;
+            padding: 12px 20px;
             font-size: 1.1rem;
             border: none;
             border-radius: 12px;
             cursor: pointer;
             z-index: 10;
+            font-weight: bold;
         }
         #yesBtn { background-color: #4caf50; color: white; }
         #noBtn { 
             background-color: #f44336; 
             color: white; 
             white-space: nowrap;
-            position: relative; 
         }
         .hidden { display: none !important; }
         input {
@@ -65,7 +70,7 @@
             border-radius: 8px;
             border: 2px solid #d32f2f;
             margin-top: 10px;
-            width: 80%;
+            width: 85%;
             font-size: 1rem;
             outline: none;
         }
@@ -78,8 +83,8 @@
             <h1 id="questionText">Will you be my Valentine Navika? ❤️</h1>
             
             <div id="passwordArea" class="hidden">
-                <p style="font-weight: bold;">I'm Gonna Need An Apology.</p>
-                <p>What's the Magic Word?</p>
+                <p style="font-weight: bold; margin: 5px 0;">I'm Gonna Need An Apology.</p>
+                <p style="margin: 5px 0;">What's the Magic Word?</p>
                 <input type="text" id="passInput" placeholder="Type here..." oninput="checkPass()">
             </div>
 
@@ -115,16 +120,19 @@
             
             if (noCount < messages.length) {
                 noBtn.innerHTML = messages[noCount];
+                
+                // Set to fixed on first click to start jumping
                 noBtn.style.position = "fixed";
 
                 const btnWidth = noBtn.offsetWidth;
                 const btnHeight = noBtn.offsetHeight;
 
-                const maxX = window.innerWidth - btnWidth - 20;
-                const maxY = window.innerHeight - btnHeight - 20;
+                // Keeps button within screen safety zone
+                const maxX = window.innerWidth - btnWidth - 30;
+                const maxY = window.innerHeight - btnHeight - 30;
 
-                const randomX = Math.max(20, Math.floor(Math.random() * maxX));
-                const randomY = Math.max(20, Math.floor(Math.random() * maxY));
+                const randomX = Math.max(30, Math.floor(Math.random() * maxX));
+                const randomY = Math.max(30, Math.floor(Math.random() * maxY));
                 
                 noBtn.style.left = randomX + "px";
                 noBtn.style.top = randomY + "px";
@@ -150,7 +158,7 @@
         function celebrate() {
             document.getElementById('askSection').classList.add('hidden');
             document.getElementById('celebrateSection').classList.remove('hidden');
-            // Updating the image here as well for the final screen
+            // Full image reveal
             document.body.style.backgroundImage = "url('A72B4E76-EB0E-4EFA-86DA-5DEDE32719F7_1_105_c.jpeg')";
             document.body.style.backgroundBlendMode = "normal";
         }
