@@ -4,68 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Be My Valentine?</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            /* This adds a hand-drawn heart doodle to the background */
-            background-color: #ffebee;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M50 80 C30 70 10 50 10 30 C10 15 25 10 40 20 C45 25 50 30 50 30 C50 30 55 25 60 20 C75 10 90 15 90 30 C90 50 70 70 50 80' fill='none' stroke='%23ffcdd2' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-size: 150px 150px;
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            overflow: hidden; 
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; margin: 0; background-color: #ffebee;
+            transition: background-color 0.5s ease; font-family: 'Arial', sans-serif;
+            text-align: center; overflow: hidden; 
         }
         #container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 85%;
-            max-width: 400px;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            border: 2px solid #ffcdd2; /* Matching the hand-drawn vibe */
+            background: rgba(255, 255, 255, 0.95); padding: 2rem;
+            border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 85%; max-width: 400px; min-height: 350px;
+            display: flex; flex-direction: column; justify-content: center;
+            position: relative; border: 2px solid #ffcdd2;
         }
-        h1 { color: #d32f2f; font-size: 1.4rem; margin-bottom: 20px; }
-        .buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            min-height: 100px;
-        }
-        button {
-            padding: 15px 25px;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            z-index: 10;
-        }
+        h1, h2 { color: #d32f2f; font-size: 1.4rem; margin-bottom: 20px; }
+        .buttons { display: flex; justify-content: center; align-items: center; gap: 20px; min-height: 150px; }
+        button { padding: 15px 25px; font-size: 1.1rem; border: none; border-radius: 12px; cursor: pointer; z-index: 10; }
         #yesBtn { background-color: #4caf50; color: white; }
-        #noBtn { 
-            background-color: #f44336; 
-            color: white; 
-            transition: all 0.2s ease;
-            white-space: nowrap;
-        }
+        #noBtn { background-color: #f44336; color: white; }
         .hidden { display: none !important; }
         input {
-            padding: 12px;
-            border-radius: 8px;
-            border: 2px solid #ffcdd2;
-            margin-top: 10px;
-            width: 80%;
-            font-size: 1rem;
-            outline: none;
+            padding: 10px; border-radius: 8px; border: 2px solid #ffcdd2;
+            margin: 5px; width: 60px; text-align: center; font-size: 1rem;
         }
+        .quiz-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
+        #timer { font-size: 1rem; color: #d32f2f; margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -73,78 +38,134 @@
     <div id="container">
         <div id="askSection">
             <h1 id="questionText">Will you be my Valentine Navika? ❤️</h1>
-            
             <div id="passwordArea" class="hidden">
                 <p>So... What's the Magic Word?</p>
-                <input type="text" id="passInput" placeholder="Type here..." oninput="checkPass()">
+                <input type="text" id="passInput" placeholder="Type here..." oninput="checkPass()" style="width: 80%;">
             </div>
-
             <div class="buttons" id="buttonArea">
                 <button id="yesBtn" onclick="celebrate()">Yes!</button>
                 <button id="noBtn" onclick="moveNo()">No</button>
             </div>
         </div>
 
+        <div id="interrogateSection" class="hidden">
+            <h2>Wait... <br>do you even know how long we've been together?</h2>
+            <div class="buttons">
+                <button style="background-color: #4caf50; color: white;" onclick="showQuiz()">Yes</button>
+                <button style="background-color: #9e9e9e; color: white;" onclick="finalShow(false)">uhh no</button>
+            </div>
+        </div>
+
+        <div id="quizSection" class="hidden">
+            <h2>Prove it.</h2>
+            <div class="quiz-container">
+                <div><small>Days</small><br><input type="number" id="qDays"></div>
+                <div><small>Hrs</small><br><input type="number" id="qHrs"></div>
+                <div><small>Mins</small><br><input type="number" id="qMins"></div>
+                <div><small>Secs</small><br><input type="number" id="qSecs"></div>
+            </div>
+            <button style="margin-top: 20px; background: #d32f2f; color: white;" onclick="checkQuiz()">Submit</button>
+        </div>
+
         <div id="celebrateSection" class="hidden">
-            <h1>BBBOOOM! Joo bob Lil Brain 👒</h1>
+            <h1 id="finalHeader">BBBOOOM! Joo bob Lil Brain 👒</h1>
+            <p id="hackerCaption" class="hidden" style="color: #d32f2f; font-weight: bold;">how tf did you know that?? 🤨</p>
             <p>I love youuuu!</p>
+            <div id="timer"></div>
             <div style="font-size: 50px; margin-top: 10px;">🥰</div>
         </div>
     </div>
 
     <script>
         let noCount = 0;
-        const messages = [
-            "lol mouse slip",
-            "mouse slip again is crazy",
-            "damn.",
-            "why am i even trying anymore",
-            "at least bo nix loves me",
-            "are u acoustic or smth",
-            "if u click it one more time its over"
-        ];
+        let yesSize = 1.1;
+        const startDate = new Date('October 7, 2024 16:00:00').getTime();
+        
+        const angryColors = ["#ffcdd2", "#ef9a9a", "#e57373", "#ef5350", "#f44336", "#d32f2f", "#b71c1c", "#000000"];
+        const messages = ["lol mouse slip", "mouse slip again is crazy", "damn.", "why am i even trying anymore", "at least bo nix loves me", "are u serious rn?", "if u click it one more time its over"];
 
         function moveNo() {
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
-            const questionText = document.getElementById('questionText');
-            
+            yesSize += 0.4;
+            yesBtn.style.fontSize = yesSize + "rem";
+            if (noCount < angryColors.length) document.body.style.backgroundColor = angryColors[noCount];
+
             if (noCount < messages.length) {
                 noBtn.innerHTML = messages[noCount];
-                
-                const maxX = window.innerWidth - noBtn.offsetWidth - 20;
-                const maxY = window.innerHeight - noBtn.offsetHeight - 20;
-                
-                const randomX = Math.floor(Math.random() * maxX);
-                const randomY = Math.floor(Math.random() * maxY);
-                
                 noBtn.style.position = "fixed";
-                noBtn.style.left = randomX + "px";
-                noBtn.style.top = randomY + "px";
-                
+                noBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+                noBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
                 noCount++;
             } else {
                 noBtn.classList.add('hidden');
                 yesBtn.classList.add('hidden');
                 document.getElementById('passwordArea').classList.remove('hidden');
-                questionText.innerHTML = "I'm Gonna Need An Apology.";
+                document.getElementById('questionText').innerHTML = "I'm Gonna Need An Apology.";
+                document.body.style.backgroundColor = "#000000";
+                document.getElementById('questionText').style.color = "white";
             }
         }
 
         function checkPass() {
-            const input = document.getElementById('passInput').value.toLowerCase();
-            if (input.includes("sorry")) {
+            if (document.getElementById('passInput').value.toLowerCase().includes("sorry")) {
                 document.getElementById('passwordArea').classList.add('hidden');
                 document.getElementById('yesBtn').classList.remove('hidden');
+                document.getElementById('yesBtn').style.fontSize = "1.5rem";
                 document.getElementById('questionText').innerHTML = "I Mean ig. <br>Click It Bro";
+                document.body.style.backgroundColor = "#ffcdd2";
+                document.getElementById('questionText').style.color = "#d32f2f";
             }
         }
 
         function celebrate() {
             document.getElementById('askSection').classList.add('hidden');
-            document.getElementById('celebrateSection').classList.remove('hidden');
-            // Change background to darker pink on success
+            document.getElementById('interrogateSection').classList.remove('hidden');
             document.body.style.backgroundColor = "#f8bbd0";
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        }
+
+        function showQuiz() {
+            document.getElementById('interrogateSection').classList.add('hidden');
+            document.getElementById('quizSection').classList.remove('hidden');
+        }
+
+        function checkQuiz() {
+            const now = new Date().getTime();
+            const diff = now - startDate;
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            const inD = parseInt(document.getElementById('qDays').value);
+            const inH = parseInt(document.getElementById('qHrs').value);
+            const inM = parseInt(document.getElementById('qMins').value);
+
+            // Checking days, hours, and minutes (ignoring seconds because it's too fast)
+            if (inD === d && inH === h && inM === m) {
+                finalShow(true);
+            } else {
+                alert("thats what i thought");
+                document.getElementById('quizSection').classList.add('hidden');
+                document.getElementById('interrogateSection').classList.remove('hidden');
+            }
+        }
+
+        function finalShow(isHacker) {
+            document.getElementById('interrogateSection').classList.add('hidden');
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('celebrateSection').classList.remove('hidden');
+            if (isHacker) document.getElementById('hackerCaption').classList.remove('hidden');
+            
+            setInterval(() => {
+                const now = new Date().getTime();
+                const diff = now - startDate;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                document.getElementById('timer').innerHTML = `${days} Days, ${hours} Hours, ${minutes} Mins, ${seconds} Secs`;
+            }, 1000);
         }
     </script>
 </body>
