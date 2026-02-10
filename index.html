@@ -13,7 +13,7 @@
             margin: 0;
             background-color: #ffebee;
             /* This puts your image in the background */
-            background-image: linear-gradient(rgba(255, 235, 238, 0.5), rgba(255, 235, 238, 0.5)), url('couple.jpg');
+            background-image: linear-gradient(rgba(255, 235, 238, 0.5), rgba(255, 235, 238, 0.5)), url('A72B4E76-EB0E-4EFA-86DA-5DEDE32719F7_1_105_c.jpeg');
             background-size: cover;
             background-position: center;
             font-family: 'Arial', sans-serif;
@@ -79,7 +79,7 @@
             
             <div id="passwordArea" class="hidden">
                 <p style="font-weight: bold;">I'm Gonna Need An Apology.</p>
-                <p>What's the Magic Word?</p>
+                <p>So... What's the Magic Word?</p>
                 <input type="text" id="passInput" placeholder="Type here..." oninput="checkPass()">
             </div>
 
@@ -131,7 +131,7 @@
                 noBtn.classList.add('hidden');
                 yesBtn.classList.add('hidden');
                 document.getElementById('passwordArea').classList.remove('hidden');
-                questionText.innerHTML = "Access Denied.";
+                questionText.innerHTML = "I'm Gonna Need An Apology.";
             }
         }
 
@@ -147,7 +147,7 @@
         function celebrate() {
             document.getElementById('askSection').classList.add('hidden');
             document.getElementById('celebrateSection').classList.remove('hidden');
-            document.body.style.backgroundImage = "url('couple.jpg')";
+            document.body.style.backgroundImage = "url('A72B4E76-EB0E-4EFA-86DA-5DEDE32719F7_1_105_c.jpeg')";
             document.body.style.backgroundBlendMode = "normal";
         }
     </script>
